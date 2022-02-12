@@ -260,6 +260,7 @@ def main():
 
     # Main
     import os
+    print('Created By : SMMSA :)')
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if os.path.exists(dir_path + '\Content'):
         p = os.popen('attrib -h ' + dir_path + '\Content')
