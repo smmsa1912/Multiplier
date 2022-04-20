@@ -1,3 +1,6 @@
+import sys
+
+
 def main():
     def existing(data1_path):
         import wmi
@@ -21,6 +24,7 @@ def main():
     # Gather All Executable Applications Path
 
     def fullscn(exe_path):
+        import win32api
         file = open(exe_path, 'w+')
         file.truncate(0)
         import os
@@ -28,28 +32,37 @@ def main():
         print(
             'This Will Take A Few Minute!! -> (Depending On How Many Applications You Have Installed In Your Device!)')
         print('Kindly Wait :)')
-        for root, dirs, files in os.walk('C:\\'):
-            for file in files:
-                if file.endswith(".exe"):
-                    name = file.endswith(".exe")
-                    Path = os.path.join(root, file)
-                    Path = Path + '\n'
-                    file = open(exe_path, 'a+')
-                    file.write(Path)
-                    # Line Counter
-                    file = open(exe_path, "r")
-                    Counter = 0
-                    # Reading from file
-                    Content = file.read()
-                    CoList = Content.split("\n")
 
-                    for i in CoList:
-                        if i:
-                            Counter += 1
-                    print('Number Of Line Written :', Counter, end='\r')
+        drives = win32api.GetLogicalDriveStrings()
+        drives = drives.split('\000')[:-1]
+        drive = 0
+        total_drives = len(drives)
+        for Drives in drives:
+            for root, dirs, files in os.walk(Drives):
+                for file in files:
+                    if file.endswith(".exe"):
+                        name = file.endswith(".exe")
+                        Path = os.path.join(root, file)
+                        Path = Path + '\n'
+                        file = open(exe_path, 'a+')
+                        file.write(Path)
+                        # Line Counter
+                        file = open(exe_path, "r")
+                        Counter = 0
+                        # Reading from file
+                        Content = file.read()
+                        CoList = Content.split("\n")
+
+                        for i in CoList:
+                            if i:
+                                Counter += 1
+                        print('Number Of Executable Path Found :', str(
+                            Counter)+',', 'Progress Done : ('+str(drive)+'/'+str(total_drives)+')', end='\r')
+            drive += 1
         exe = open(exe_path, 'a+')
         exe.write('End Of List')
-        print('Scanning And Writing Done Successfully!!')
+        print('Scanning And Writing Done Successfully!!, "Progress Done : (' +
+              str(drive)+'/'+str(total_drives)+')"                                 ')
 
     # Gather Background Applications List List (2)
 
@@ -81,11 +94,13 @@ def main():
         Data1 = open(data1_path, 'r')
         data1 = Data1.read()
         for Data in Data2:
-            print('Trying To Find :', Data)
+            print('\n')
+            Dat = Data.replace('\n', '')
+            print('Trying To Find :', Dat)
             if Data in data1:
-                print('Found :', Data)
+                print('Found :', Dat)
             else:
-                print('Cant Find :', Data)
+                print('Cant Find :', Dat)
                 blacklist.append(Data)
         Data1 = open(data1_path, 'w+')
         Data2 = open(data2_path, 'r')
@@ -100,19 +115,20 @@ def main():
         i = 0
         brk_num = 3
         import os
-        print('Starting :', names)
+        print('Trying To Execute :', names)
         while True:
             def start_app(path):
                 try:
                     os.startfile(path)
                 except:
                     return False
-
             if start_app(path) is False:
-                print(names, ': Cant Start')
+                name = names.replace('\n', '')
+                print('Cant Execute :',name, ':(')
                 return False
             else:
-                print(names, ': Started successfully!')
+                name = names.replace('\n', '')
+                print('Executed successfully :',name,':)')
                 i += 1
 
             if i == brk_num:
@@ -120,7 +136,10 @@ def main():
                     if names in list:
                         index = blacklist.index(names)
                         print('Removing :', names)
-                        blacklist.pop(int(index))
+                        try:
+                            blacklist.pop(int(index))
+                        except:
+                            print('Cant Remove :', name)
                     else:
                         break
             if i == brk_num:
@@ -142,7 +161,7 @@ def main():
                 for names in lists:
                     for path in file:
                         if path.endswith(names):
-                            print('Executble Path Found!')
+                            print('Executble Path Found For :',names)
                             if '\n' in path:
                                 path = path.replace('\n', '')
                             if '\n' in lists:
@@ -260,7 +279,6 @@ def main():
 
     # Main
     import os
-    print('Created By : SMMSA :)')
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if os.path.exists(dir_path + '\Content'):
         p = os.popen('attrib -h ' + dir_path + '\Content')
@@ -296,12 +314,12 @@ def main():
                     with open(data1_path, 'r') as fp:
                         for count, line in enumerate(fp):
                             pass
-                        print('\nNumber Of Line In Data1:', count + 1)
+                        # print('\nNumber Of Line In Data1:', count + 1)
                         c_Data1 = count + 1
                     with open(data2_path, 'r') as fp:
                         for count, line in enumerate(fp):
                             pass
-                        print('Number Of Line In Data2:', count + 1)
+                        # print('Number Of Line In Data2:', count + 1)
                         c_Data2 = count + 1
                     if c_Data1 != c_Data2:
                         blacklist.clear()
