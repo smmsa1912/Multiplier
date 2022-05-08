@@ -86,6 +86,8 @@ def main():
                 return False
 
     blacklist = []
+    opened = []
+    closed = []
 
     # Compare Data1 And Data2
 
@@ -93,15 +95,42 @@ def main():
         Data2 = open(data2_path, 'r')
         Data1 = open(data1_path, 'r')
         data1 = Data1.read()
-        for Data in Data2:
+        data2 = Data2.readlines()
+        for Data in data2:
             print('\n')
             Dat = Data.replace('\n', '')
-            print('Trying To Find :', Dat)
+            print('Trying To Find :', Dat, 'In Data1')
             if Data in data1:
                 print('Found :', Dat)
             else:
                 print('Cant Find :', Dat)
+                opened.append(Data)
                 blacklist.append(Data)
+    ''' Data1 = open(data1_path, 'w+')
+        Data2 = open(data2_path, 'r')
+        data = Data2.read()
+        print('Editing Data1')
+        Data1.write(data)
+        print('Editing Data1 Done!!')'''
+
+    # Compare Data2 And Data1
+
+    def Check(data1_path, data2_path):
+        data1 = open(data1_path, 'r')
+        data2 = open(data2_path, 'r')
+        data1 = data1.readlines()
+        data2 = data2.read()
+
+        for data in data1:
+            print('\n')
+            Dat = data.replace('\n', '')
+            print('Trying To Find :', Dat, 'In Data2')
+            if data in data2:
+                print('Found', Dat, 'In Data2')
+            else:
+                print('Cant Find :', data)
+                closed.append(data)
+                blacklist.append(data)
         Data1 = open(data1_path, 'w+')
         Data2 = open(data2_path, 'r')
         data = Data2.read()
@@ -124,11 +153,11 @@ def main():
                     return False
             if start_app(path) is False:
                 name = names.replace('\n', '')
-                print('Cant Execute :',name, ':(')
+                print('Cant Execute :', name, ':(')
                 return False
             else:
                 name = names.replace('\n', '')
-                print('Executed successfully :',name,':)')
+                print('Executed successfully :', name, ':)')
                 i += 1
 
             if i == brk_num:
@@ -161,7 +190,7 @@ def main():
                 for names in lists:
                     for path in file:
                         if path.endswith(names):
-                            print('Executble Path Found For :',names)
+                            print('Executble Path Found For :', names)
                             if '\n' in path:
                                 path = path.replace('\n', '')
                             if '\n' in lists:
@@ -278,6 +307,7 @@ def main():
     exe_path = path('Exe')
 
     # Main
+    print('Created By SMMSA :)')
     import os
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if os.path.exists(dir_path + '\Content'):
@@ -324,6 +354,7 @@ def main():
                     if c_Data1 != c_Data2:
                         blacklist.clear()
                         check(data1_path, data2_path)
+                        Check(data1_path, data2_path)
                         starter(exe_path)
                         print('All Done Rescanning....')
                         runner(data2_path)
@@ -351,7 +382,6 @@ try:
     main()
 except KeyboardInterrupt:
     import os
-
     print('\nAn Error Occured While Running Main File..!! :(')
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if os.path.exists(dir_path + '\Content'):
@@ -362,7 +392,6 @@ except Exception as e:
     print(e)
     import os
     import time
-
     print('\nAn Error Occured While Running Main File..!! :(')
     print('Retrying To Run Main File In 3 Second..!!')
     time.sleep(3)
