@@ -379,7 +379,13 @@ def exit():
 
 
 try:
-    main()
+    print('This Is The Old Version Kindly Run Multiplier.py File For More Feature!!')
+    a = input('Do YOu Want To Run This Old Version?? (Kindly Press Enter To Continue :))')
+    if a == '':
+        main()
+    else:
+        print('Ok Kindly Run Multiplier.py By Typing "<Python Path> <This File(Multiplier.py) Path>"')
+        quit()
 except KeyboardInterrupt:
     import os
     print('\nAn Error Occured While Running Main File..!! :(')
