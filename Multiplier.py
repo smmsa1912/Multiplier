@@ -22,7 +22,7 @@ def main():
             print(
                 '\n\nAn Unexpected Error Occured While Writing Data1!! Look Like The Required Files Are Getting Deleted!!')
             print('Retrying!! :)')
-            find(data1_path, data2_path, exe_path)
+            find(data1_path, data2_path, exe_path, application_path)
 
     # Gather All Executable Applications Path
 
@@ -83,7 +83,7 @@ def main():
             print(
                 '\nAn Unexpected Error Occured While Writing Exe File!! Look Like The Required Files Are Getting Deleted!!')
             print('Retrying!! :)')
-            find(data1_path, data2_path, exe_path)
+            find(data1_path, data2_path, exe_path, application_path)
         print('Scanning And Writing Done Successfully!!, "Progress Done : (' +
               str(drive)+'/'+str(total_drives)+')"                                 ')
 
@@ -112,7 +112,7 @@ def main():
                 print(
                     '\nAn Unexpected Error Occured While Writing Data2!! Look Like The Required Files Are Getting Deleted!!')
                 print('Retrying!! :)')
-                find(data1_path, data2_path, exe_path)
+                find(data1_path, data2_path, exe_path, application_path)
 
     blacklist = []
     opened = []
@@ -258,13 +258,19 @@ def main():
         import winapps
         # get each application with list_installed()
         Installed_Apps = 0
-        for item in winapps.list_installed():
-            Applications.write(str(item.name)+'\n')
-            if item:
-                Installed_Apps += 1
-        Applications.write(
-            'Total Installed Applications : '+str(Installed_Apps)+', Previously Scanned Result : '+str(Last_scanned))
-        Applications.close()
+        try:
+            for item in winapps.list_installed():
+                Applications.write(str(item.name)+'\n')
+                if item:
+                    Installed_Apps += 1
+            Applications.write(
+                'Total Installed Applications : '+str(Installed_Apps)+', Previously Scanned Result : '+str(Last_scanned))
+            Applications.close()
+        except FileNotFoundError:
+            print(
+                '\nAn Unexpected Error Occured While Writing Application!! Look Like The Required Files Are Getting Deleted!!')
+            print('Retrying!! :)')
+            find(data1_path, data2_path, exe_path, application_path)
 
     def find(data1_path, data2_path, exe_path, application_path):
         tried = 0
@@ -498,7 +504,6 @@ def exit():
 
 
 try:
-    print('Created By SMMSA :)')
     main()
 except KeyboardInterrupt:
     import os
@@ -511,7 +516,6 @@ except PermissionError:
     print('\nAn Unexpected Permission Error Occured!! Try Running As Administrator :)')
     exit()
 except FileNotFoundError:
-    print('Retrying!!')
     main()
 except Exception as e:
     repet = 0
