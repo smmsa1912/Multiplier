@@ -430,7 +430,6 @@ def main():
                         last_line = last_line.split(',')[:1]
                         last_line = ''.join(last_line).split(':')[1:]
                         Current_Scan = ''.join(last_line).replace(' ', '')
-                        print(Current_Scan, Previous_Scan)
                         Previous_Scan = int(Previous_Scan)
                         Current_Scan = int(Current_Scan)
                         if Previous_Scan == Current_Scan or Previous_Scan == 0:
