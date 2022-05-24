@@ -243,7 +243,20 @@ def main():
 
     def Installed_Apps(application_path):
         Last_scanned = 0
-        Applications = open(application_path, 'r')
+        Applications = None
+        try:
+            Applications = open(application_path, 'r')
+        except FileNotFoundError:
+            try:
+                dir_path = os.path.dirname(os.path.realpath(__file__))
+                path = os.path.dirname(os.path.abspath(__file__))
+                newpath = dir_path + '\Content'
+                open(newpath+'\Application', 'x')
+                Applications = open(application_path, 'r')
+            except FileExistsError:
+                print('An Error Occured!!, Retrying!!')
+                main()
+
         Applications = Applications.read()
         if 'Total Installed Applications : ' in Applications:
             Applications = open(application_path, 'r')
@@ -314,15 +327,19 @@ def main():
             else:
                 if Data1 is False:
                     print('Cant Find Data1')
+                    open(newpath+'\Data1', 'x')
                     existing(data1_path)
                 if Data2 is False:
                     print('Cant Find Data2')
+                    open(newpath+'\Data2', 'x')
                     runner(data2_path)
                 if Exe is False:
                     print('Cant Find Exe')
+                    open(newpath+'\Exe', 'x')
                     fullscn(exe_path)
                 if Applications is False:
                     print('Cant Find Application')
+                    open(newpath+'\Application', 'x')
                     Installed_Apps(application_path)
             tried += 1
 
@@ -413,7 +430,10 @@ def main():
                         last_line = last_line.split(',')[:1]
                         last_line = ''.join(last_line).split(':')[1:]
                         Current_Scan = ''.join(last_line).replace(' ', '')
-                        if Previous_Scan == Current_Scan:
+                        print(Current_Scan, Previous_Scan)
+                        Previous_Scan = int(Previous_Scan)
+                        Current_Scan = int(Current_Scan)
+                        if Previous_Scan == Current_Scan or Previous_Scan == 0:
                             pass
                         else:
                             if Previous_Scan < Current_Scan:
